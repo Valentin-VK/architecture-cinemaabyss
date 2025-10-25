@@ -59,6 +59,8 @@ jobs:
           # Wait for services to be ready
           echo "Waiting for services to be ready..."
           sleep 15
+          docker compose up -d
+          sleep 15
           # Build the Docker image
           docker build -t cinemaabyss-api-tests .
           
