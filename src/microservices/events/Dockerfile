@@ -5,10 +5,12 @@ WORKDIR /usr/src/app
 
 # Клонируем репозиторий или копируем код
 COPY pom.xml .
-RUN mvn dependency:go-offline
+#RUN mvn dependency:go-offline
 
 # Полностью скопируем весь проект
-COPY . .
+COPY src src
+
+RUN mvn clean package -DskipTests
 
 # Вторая стадия: Создание минимального рабочего образа
 FROM openjdk:11-jre-slim
