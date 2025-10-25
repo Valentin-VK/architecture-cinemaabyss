@@ -22,7 +22,7 @@ WORKDIR /opt/app
 COPY --from=builder /usr/src/app/target/*.jar app.jar
 
 # Устанавливаем точку входа для запуска приложения
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/opt/app/app.jar"]
 
 # Открытый порт приложения
 EXPOSE 8082
