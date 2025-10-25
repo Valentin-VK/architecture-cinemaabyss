@@ -24,7 +24,7 @@ services:
 
   # ZooKeeper for Kafka
   zookeeper:
-    image: wurstmeister/zookeeper:latest
+    image: zookeeper:3.7
     container_name: cinemaabyss-zookeeper
     ports:
       - "2181:2181"
@@ -33,7 +33,7 @@ services:
 
   # Kafka
   kafka:
-    image: wurstmeister/kafka:2.13-2.7.0
+    image: apache/kafka:4.1.0
     container_name: cinemaabyss-kafka
     depends_on:
       - zookeeper
