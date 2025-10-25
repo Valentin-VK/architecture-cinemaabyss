@@ -1,9 +1,23 @@
-# Выбор базы Docker-образа
+# Первая стадия: Сборка проекта
+FROM maven:3.8-openjdk-11 AS builder
+
+WORKDIR /usr/src/app
+
+# Клонируем репозиторий или копируем код
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Полностью скопируем весь проект
+COPY . .
+
+# Вторая стадия: Создание минимального рабочего образа
 FROM openjdk:11-jre-slim
 
-# Копируем артефакт сборки Spring Boot
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+# Создаем рабочую директорию
+WORKDIR /opt/app
+
+# Переносим собранный jar-файл из первой стадии
+COPY --from=builder /usr/src/app/target/*.jar app.jar
 
 # Устанавливаем точку входа для запуска приложения
 ENTRYPOINT ["java", "-jar", "/app.jar"]
