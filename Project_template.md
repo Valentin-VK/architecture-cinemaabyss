@@ -5,7 +5,7 @@
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
 Результат представьте в виде контейнерной диаграммы в нотации С4.
 Добавьте ссылку на файл в этот шаблон
-[ссылка на файл](ссылка)
+[Контейнерная диаграмма](diagrams/Containers.puml)
 
 # Задание 2
 
@@ -58,6 +58,10 @@
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka из UI http://localhost:8090 
+
+![api-test](assets/api-tests.png)
+
+![kafka-ui](assets/kafka-ui.png)
 
 # Задание 3
 
@@ -257,10 +261,48 @@ cat .docker/config.json | base64
   9. Добавьте в /etc/hosts
   127.0.0.1 cinemaabyss.example.com
 
+> Т.к. ноут рабочий, локально нет прав вносить изменения в /etc/hosts
+> Решил задачу с помощью команды ./minikube-darwin-arm64 service events-service -n cinemaabyss
+
+```
+|-------------|----------------|-------------|-------------------------|
+|  NAMESPACE  |      NAME      | TARGET PORT |           URL           |
+|-------------|----------------|-------------|-------------------------|
+| cinemaabyss | events-service |        8082 | http://172.17.0.2:32659 |
+|-------------|----------------|-------------|-------------------------|
+🏃  Starting tunnel for service events-service.
+|-------------|----------------|-------------|------------------------|
+|  NAMESPACE  |      NAME      | TARGET PORT |          URL           |
+|-------------|----------------|-------------|------------------------|
+| cinemaabyss | events-service |             | http://127.0.0.1:63465 |
+|-------------|----------------|-------------|------------------------|
+🎉  Opening service cinemaabyss/events-service in default browser...
+❗  Because you are using a Docker driver on darwin, the terminal needs to be open to run it.
+
+```
+
   10. Вызовите
   ```bash
   minikube tunnel
   ```
+
+> Отсутствуют права на данную команду, у меня нет прав администратора на рабочий ноут
+
+```
+@WM-FJ62JW96DV Minikube_1.34.0 % ./minikube-darwin-arm64 tunnel
+✅  Tunnel successfully started
+
+📌  NOTE: Please do not close this terminal as this process must stay alive for the tunnel to be accessible ...
+
+❗  The service/ingress cinemaabyss-ingress requires privileged ports to be exposed: [80 443]
+🔑  sudo permission will be asked for it.
+🏃  Starting tunnel for service cinemaabyss-ingress.
+Password:
+
+^C✋  Stopped tunnel for service cinemaabyss-ingress.
+
+```
+
   11. Вызовите https://cinemaabyss.example.com/api/movies
   Вы должны увидеть вывод списка фильмов
   Можно поэкспериментировать со значением   MOVIES_MIGRATION_PERCENT в src/kubernetes/configmap.yaml и убедится, что вызовы movies уходят полностью в новый сервис
@@ -275,6 +317,8 @@ cat .docker/config.json | base64
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
+[Вывод API movies](assets/api_movies.png)
+[Логи event-service](assets/event-service-logs.png)
 
 # Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -332,7 +376,7 @@ kubectl delete  namespace cinemaabyss
 ```
 Запустите 
 ```bash
-helm install cinemaabyss .\src\kubernetes\helm --namespace cinemaabyss --create-namespace
+helm install cinemaabyss src/kubernetes/helm --namespace cinemaabyss --create-namespace
 ```
 Если в процессе будет ошибка
 ```code
@@ -349,6 +393,14 @@ minikube tunnel
 Потом вызовите 
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
+
+[Статус развертывания](assets/helm-install.png)
+
+> Выполнить вызов minikube tunnel не могу из-отсутствия необходимых прав, по причине озвученной выше
+> Вызов API выполнил обходным путем
+
+[Прокидывание порта](assets/minikube-fix.png)
+[Результат вывода api/movies](assets/api-movies-2.png)
 
 ## Удаляем все
 
