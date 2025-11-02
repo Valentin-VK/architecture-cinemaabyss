@@ -24,46 +24,8 @@ spec:
         app: proxy-service
     spec:
       containers:
-        - name: proxy-service
-          image: "{{ .Values.proxyService.image.repository }}:{{ .Values.proxyService.image.tag }}"
-          imagePullPolicy: {{ .Values.proxyService.image.pullPolicy | quote }}
-          ports:
-            - containerPort: {{ .Values.proxyService.service.port }}
-          env:
-            - name: PORT
-              value: "{{ .Values.proxyService.service.port }}"
-            - name: MONOLITH_URL
-              value: "{{ .Values.proxyService.monolithUrl }}"
-            - name: MOVIES_SERVICE_URL
-              value: "{{ .Values.proxyService.moviesServiceUrl }}"
-            - name: EVENTS_SERVICE_URL
-              value: "{{ .Values.proxyService.eventsServiceUrl }}"
-            - name: GRADUAL_MIGRATION
-              value: "{{ .Values.proxyService.gradualMigration | toString }}"
-            - name: MOVIES_MIGRATION_PERCENT
-              value: "{{ .Values.proxyService.moviesMigrationPercent }}"
-          resources:
-            limits:
-              cpu: "{{ .Values.proxyService.resources.limits.cpu }}"
-              memory: "{{ .Values.proxyService.resources.limits.memory }}"
-            requests:
-              cpu: "{{ .Values.proxyService.resources.requests.cpu }}"
-              memory: "{{ .Values.proxyService.resources.requests.memory }}"
-          readinessProbe:
-            httpGet:
-              path: "{{ .Values.proxyService.probes.readiness.path }}"
-              port: {{ .Values.proxyService.service.port }}
-            initialDelaySeconds: {{ .Values.proxyService.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.proxyService.probes.readiness.periodSeconds }}
-          livenessProbe:
-            httpGet:
-              path: "{{ .Values.proxyService.probes.liveness.path }}"
-              port: {{ .Values.proxyService.service.port }}
-            initialDelaySeconds: {{ .Values.proxyService.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.proxyService.probes.liveness.periodSeconds }}
-      restartPolicy: Always
-      imagePullSecrets:
-        - name: dockerconfigjson
+      - name: proxy-service
+        ..... тут
 ---
 apiVersion: v1
 kind: Service
@@ -76,9 +38,5 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   selector:
-    app: proxy-service
-  ports:
-    - port: {{ .Values.proxyService.service.port }}
-      targetPort: {{ .Values.proxyService.service.port }}
-  type: {{ .Values.proxyService.service.type }}
+    ... и тут
 {{- end }}
