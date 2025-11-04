@@ -13,7 +13,7 @@ COPY src src
 RUN mvn clean package -DskipTests
 
 # Вторая стадия: Создание минимального рабочего образа
-FROM eclipse-temurin:11-alpine
+FROM adoptopenjdk:11-jre-hotspot
 
 # Создаем рабочую директорию
 WORKDIR /opt/app
