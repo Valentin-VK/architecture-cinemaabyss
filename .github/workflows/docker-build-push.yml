@@ -102,8 +102,8 @@ jobs:
           push: true
           tags: ${{ steps.meta-events.outputs.tags }}
           labels: ${{ steps.meta-events.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: ""
+          cache-to: ""
 
 
       # Proxy Service
