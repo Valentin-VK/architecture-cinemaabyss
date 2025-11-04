@@ -13,7 +13,7 @@ COPY src src
 RUN mvn clean package -DskipTests
 
 # Вторая стадия: Создание минимального рабочего образа
-FROM openjdk:11-jre-slim
+FROM openjdk:11-jre
 
 # Создаем рабочую директорию
 WORKDIR /opt/app
