@@ -34,7 +34,7 @@ monolith:
   enabled: true
   image:
     repository: ghcr.io/valentin-vk/architecture-cinemaabyss/monolith
-    tag: latest
+    tag: sha-78d557c@sha256:fad8d90d3eaa1e8bbdf4964b7f113de3ba6969d6f0d9653aaf52cfb878441f5d
     pullPolicy: Always
   replicas: 1
   resources:
@@ -54,7 +54,7 @@ proxyService:
   enabled: true
   image:
     repository: ghcr.io/valentin-vk/architecture-cinemaabyss/proxy-service
-    tag: latest
+    tag: sha-78d557c@sha256:5f2188997dbc32e0d1ce945811c6316bbf8153fb14fe92330f3a292c5bad4e74
     pullPolicy: Always
   replicas: 1
   resources:
@@ -90,7 +90,7 @@ moviesService:
   enabled: true
   image:
     repository: ghcr.io/valentin-vk/architecture-cinemaabyss/movies-service
-    tag: latest
+    tag: sha-78d557c@sha256:d1dbfc86d28f22c11f9f285875ce1a8cee7bbb387c180df1d52339bd2d7cbd54
     pullPolicy: Always
   replicas: 1
   resources:
@@ -110,7 +110,7 @@ eventsService:
   enabled: true
   image:
     repository: ghcr.io/valentin-vk/architecture-cinemaabyss/events-service
-    tag: latest
+    tag: sha-78d557c@sha256:c38b1d028877c5e0d3ecfb497d1f4f81fafd08c687e0c5a5922202c0662b8513
     pullPolicy: Always
   replicas: 1
   resources:

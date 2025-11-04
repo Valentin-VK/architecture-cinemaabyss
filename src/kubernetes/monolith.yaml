@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: monolith
-        image: ghcr.io/valentin-vk/architecture-cinemaabyss/monolith:latest
+        image: ghcr.io/valentin-vk/architecture-cinemaabyss/monolith:sha-78d557c@sha256:fad8d90d3eaa1e8bbdf4964b7f113de3ba6969d6f0d9653aaf52cfb878441f5d
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

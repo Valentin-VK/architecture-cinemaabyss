@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: proxy-service
-          image: ghcr.io/valentin-vk/architecture-cinemaabyss/proxy-service:latest
+          image: ghcr.io/valentin-vk/architecture-cinemaabyss/proxy-service:sha-78d557c@sha256:5f2188997dbc32e0d1ce945811c6316bbf8153fb14fe92330f3a292c5bad4e74
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
