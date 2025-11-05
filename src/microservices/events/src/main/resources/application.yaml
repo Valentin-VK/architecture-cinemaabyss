@@ -1,0 +1,13 @@
+kafka:
+  topic:
+    movie-events: movie-events
+    user-events: user-events
+    payment-events: payment-events
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:kafka:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+server:
+  port: 8082

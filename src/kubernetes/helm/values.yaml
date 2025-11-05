@@ -5,7 +5,7 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6ICJWbUZzWlc1MGFXNHRWa3M2WjJod1gyMVpSVlJRVWtNMlJHSTVSWEZHZG1rd00zTnZTMmM0ZDFOeGFWSlhPREZhTTFkaU1nPT0iCgkJfQoJfSwKCSJjcmVkc1N0b3JlIjogImRlc2t0b3AiLAoJImN1cnJlbnRDb250ZXh0IjogImRlc2t0b3AtbGludXgiLAoJInBsdWdpbnMiOiB7CgkJIi14LWNsaS1oaW50cyI6IHsKCQkJImVuYWJsZWQiOiAidHJ1ZSIKCQl9LAoJCSJkZWJ1ZyI6IHsKCQkJImhvb2tzIjogImV4ZWMiCgkJfSwKCQkic2NvdXQiOiB7CgkJCSJob29rcyI6ICJwdWxsLGJ1aWxkeCBidWlsZCIKCQl9Cgl9LAoJImZlYXR1cmVzIjogewoJCSJob29rcyI6ICJ0cnVlIgoJfQp9
 # Database configuration
 database:
   host: postgres
@@ -33,8 +33,8 @@ database:
 monolith:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/monolith
-    tag: latest
+    repository: ghcr.io/valentin-vk/architecture-cinemaabyss/monolith
+    tag: sha-78d557c@sha256:fad8d90d3eaa1e8bbdf4964b7f113de3ba6969d6f0d9653aaf52cfb878441f5d
     pullPolicy: Always
   replicas: 1
   resources:
@@ -53,28 +53,44 @@ monolith:
 proxyService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/proxy-service
-    tag: latest
+    repository: ghcr.io/valentin-vk/architecture-cinemaabyss/proxy-service
+    tag: sha-78d557c@sha256:5f2188997dbc32e0d1ce945811c6316bbf8153fb14fe92330f3a292c5bad4e74
     pullPolicy: Always
   replicas: 1
   resources:
     limits:
-      cpu: 300m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
       cpu: 100m
       memory: 128Mi
   service:
-    port: 80
+    port: 8000
     targetPort: 8000
     type: ClusterIP
+  monolithUrl: http://monolith:8080
+  moviesServiceUrl: http://movies-service:8081
+  eventsServiceUrl: http://events-service:8082
+  gradualMigration: true
+  moviesMigrationPercent: 50
+  probes:
+    readiness:
+      path: "/health"
+      port: 8000
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    liveness:
+      path: "/health"
+      port: 8000
+      initialDelaySeconds: 15
+      periodSeconds: 20
 
 # Movies service configuration
 moviesService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/movies-service
-    tag: latest
+    repository: ghcr.io/valentin-vk/architecture-cinemaabyss/movies-service
+    tag: sha-78d557c@sha256:d1dbfc86d28f22c11f9f285875ce1a8cee7bbb387c180df1d52339bd2d7cbd54
     pullPolicy: Always
   replicas: 1
   resources:
@@ -93,14 +109,14 @@ moviesService:
 eventsService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/events-service
-    tag: latest
+    repository: ghcr.io/valentin-vk/architecture-cinemaabyss/events-service
+    tag: sha-78d557c@sha256:c38b1d028877c5e0d3ecfb497d1f4f81fafd08c687e0c5a5922202c0662b8513
     pullPolicy: Always
   replicas: 1
   resources:
     limits:
-      cpu: 300m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -108,13 +124,22 @@ eventsService:
     port: 8082
     targetPort: 8082
     type: ClusterIP
+  probes:
+    readiness:
+      path: "/api/events/health"
+      initialDelaySeconds: 10
+      periodSeconds: 10
+    liveness:
+      path: "/api/events/health"
+      initialDelaySeconds: 10
+      periodSeconds: 10
 
 # Kafka configuration
 kafka:
   enabled: true
   image:
-    repository: wurstmeister/kafka
-    tag: 2.13-2.7.0
+    repository: apache/kafka
+    tag: 4.0.1
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
@@ -143,8 +168,8 @@ kafka:
 zookeeper:
   enabled: true
   image:
-    repository: wurstmeister/zookeeper
-    tag: latest
+    repository: zookeeper
+    tag: 3.7
     pullPolicy: IfNotPresent
   replicas: 1
   resources:
@@ -172,7 +197,7 @@ ingress:
         - path: /
           pathType: Prefix
           service: proxy-service
-          port: 80
+          port: 8000
         - path: /api/events
           pathType: Prefix
           service: events-service
